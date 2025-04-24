@@ -62,6 +62,7 @@ function MainContainer() {
           </Route>
 
           <Route path="Studentpage" element={<Studentmainpage/>}>
+          <Route path="" element={<AllBook />} />
             <Route path="Avelablebook" element={<AllBook />} />
             <Route path="bookrack" element={<BookRack/>} />
             <Route path="Stdissuebook" element={<Issuebook />} />

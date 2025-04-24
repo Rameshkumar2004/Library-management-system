@@ -3,6 +3,8 @@ const mongoose = require("mongoose");
 const Book=require("./Routes/bookroutes");
 const User =require("./Routes/userroute");
 const Admin =require("./Routes/adminroute")
+const Issuebook = require("./Routes/Issueroute");
+
 const cors=require ("cors")
 const app = express(); // Fixed typo
 
@@ -30,6 +32,7 @@ mongoose.connect("mongodb://localhost:27017/Library-ms")
 app.use("/api/Book",Book)
 app.use("/api/User",User)
 app.use("/api/admin",Admin)
+app.use("/api/Issuebook",Issuebook)
 
 // Server listening
 app.listen(3000, () => {  // Updated port to 3000

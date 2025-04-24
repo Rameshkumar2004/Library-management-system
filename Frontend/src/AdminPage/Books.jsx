@@ -11,6 +11,7 @@ import AddBook from './AddBook';
 function Books() {
 
  const [useBook, setBookData]=useState([]);
+ const [search, setSearch] = useState("");
 
    const dialogRef = useRef(null);
     
@@ -31,10 +32,17 @@ function Books() {
     fetchAllBook();
   },[])
 
-  // const handleDelete=async(id)=>{
-  //   const res=await axios.delete(`http://localhost:3000/api/Book/delete/${id}`)
-  // }
-
+  const filterBook = useBook.filter((item) => {
+    const searchLower = search.toLowerCase();
+    return (
+      item.BookName?.toLowerCase().includes(searchLower) ||
+      item.Author?.toLowerCase().includes(searchLower) ||
+      item.ISBN?.toLowerCase().includes(searchLower)||
+      item.Category?.toLowerCase().includes(searchLower)||
+      item.Rack?.toLowerCase().includes(searchLower)
+    );
+  });
+  
      const handleDelete = async (id) => {
         const confirmDelete = window.confirm("Are you sure you want to delete this Book?");
         if (!confirmDelete) return;
@@ -44,11 +52,11 @@ function Books() {
           if (res.status === 200) {
             // Filter out the deleted user from the state
             setBookData((prevBooks) => prevBooks.filter((useBook) => useBook._id !== id));
-            alert("User deleted successfully.");
+            alert("Book deleted successfully.");
           }
         } catch (error) {
           console.error("Error deleting Book:", error);
-          alert("An error occurred while deleting the user.");
+          alert("An error occurred while deleting the book.");
         }
       };
 
@@ -63,6 +71,8 @@ function Books() {
           type="text" 
           placeholder="Search book"  
           className="text-black p-1  w-full block relative"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
         />
         <IoSearch   className="  text-black relative "  size={25} />
       </div>
@@ -71,9 +81,6 @@ function Books() {
       <button className="p-2 bg-blue-600 font-bold text-lg rounded-lg text-white"
       onClick={openDialog}
       >
-        {/* <Link to="http://localhost:5173/Adminpage/addbook" className="text-white">
-          Add Book
-        </Link> */}
         Add Book
       </button>
     </div>
@@ -99,7 +106,7 @@ function Books() {
           <tbody>
             {/* Example row, replace with dynamic data */}
           {
-            useBook.map((item ,i)=>(
+            filterBook.map((item ,i)=>(
               <tr className="text-center bg-white border-b">
               <td className="p-2">{i+1}</td>
               <td className="p-2">{item.BookName}</td>
@@ -110,9 +117,10 @@ function Books() {
               <td className="p-2">{item.Rack}</td>
               <td className="p-2">{item.No_of_copies}</td>
               <td className="p-2 text-green-600">{item.Status}</td>
-              <td className="p-2">{item.createdAt}</td>
+              <td className="p-2">{new Date(new Date(item.createdAt)).toLocaleDateString()}</td>
               <td className="p-2 flex justify-center gap-2">
-                <button className="py-2 px-4 bg-yellow-300 rounded-lg gap-2 font-semibold">
+                <button className="py-2 px-4 bg-yellow-300 rounded-lg gap-2 font-semibold"
+                onClick={openDialog}>
                   Edit
                 </button>
                 <button className="py-2 px-3 bg-red-600 rounded-lg font-semibold" onClick={()=>handleDelete(item._id)}>

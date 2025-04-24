@@ -7,6 +7,7 @@ import { IoSearch } from "react-icons/io5";
 
 function AllBook() {
     const [useBook, setBookData]=useState([]);
+    const [search, setSearch] = useState("");
 
    const fetchAllBook= async()=>{
      const res=await axios.get("http://localhost:3000/api/Book/getBooks");
@@ -17,6 +18,18 @@ function AllBook() {
    useEffect(()=>{
      fetchAllBook();
    },[])
+
+   const filterBook = useBook.filter((item) => {
+    const searchLower = search.toLowerCase();
+    return (
+      item.BookName?.toLowerCase().includes(searchLower) ||
+      item.Author?.toLowerCase().includes(searchLower) ||
+      item.ISBN?.toLowerCase().includes(searchLower)||
+      item.Category?.toLowerCase().includes(searchLower)||
+      item.Rack?.toLowerCase().includes(searchLower)
+    );
+  });
+  
  
    return (
      <div className=" p-4 w-[100%] h-[100%] border-red-600 border-2">
@@ -56,7 +69,7 @@ function AllBook() {
            <tbody>
              {/* Example row, replace with dynamic data */}
            {
-             useBook.map((item ,i)=>(
+              filterBook.map((item ,i)=>(
                <tr className="text-center bg-white border-b">
                <td className="p-2">{i+1}</td>
                <td className="p-2">{item.BookName}</td>
@@ -67,7 +80,7 @@ function AllBook() {
                <td className="p-2">{item.Rack}</td>
                <td className="p-2">{item.No_of_copies}</td>
                <td className="p-2 text-green-600">{item.Status}</td>
-               <td className="p-2">{item.createdAt}</td>
+               <td className="p-2">{new Date(new Date(item.createdAt)).toLocaleDateString()}</td>
                
              </tr>
              ))

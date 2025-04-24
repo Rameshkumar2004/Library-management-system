@@ -47,18 +47,30 @@ exports.getSBINById = async(req, res) =>{
    }
 }
 
-exports.updateBook = async(req, res)=>{
-  try{
-  
-    const book = await Books.findByIdAndUpdate(req.params.id, req.body,{new:true, runValidators:true})
-    if(!book) return res.status(404).send("Book not found");
-    return res.status(200).send(book)
-  } catch(err){
-    return res.status(404).send(err.message)
+exports.updateBook = async (req, res) => {
+  try {
+    const book = await Books.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true, runValidators: true }
+    );
+
+    if (!book) {
+      return res.status(404).send("Book not found");
+    }
+
+    return res.status(200).send(book);
+  } catch (err) {
+    // If it's a validation error, respond with 400 (Bad Request)
+    if (err.name === 'ValidationError') {
+      return res.status(400).send(err.message);
+    }
+
+    // For other errors, respond with 500 (Internal Server Error)
+    return res.status(500).send("Server error: " + err.message);
   }
-  
-  
-}
+};
+
 
 
 exports.deleteBook = async(req, res)=>{
@@ -74,3 +86,22 @@ exports.deleteBook = async(req, res)=>{
   }
 
 }
+
+exports.updateBookCopies = async (req, res) => {
+  try {
+    const book = await Books.findById(req.params.id);
+    if (!book) return res.status(404).send("Book not found");
+
+    if (book.copies <= 0) {
+      return res.status(400).send("No copies left");
+    }
+
+    book.copies -= 1;
+    await book.save();
+
+    return res.status(200).send(book);
+  } catch (err) {
+    return res.status(500).send("Server error: " + err.message);
+  }
+};
+

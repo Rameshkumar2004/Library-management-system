@@ -67,12 +67,12 @@ function UserLogin() {
           >
             Login
           </button>
-          <p className="text-sm text-center mt-2">
+          {/* <p className="text-sm text-center mt-2">
             Don't have an account?{" "}
             <Link to="/register" className="text-blue-400 hover:underline">
               Register
             </Link>
-          </p>
+          </p> */}
         </form>
       </div>
     </div>

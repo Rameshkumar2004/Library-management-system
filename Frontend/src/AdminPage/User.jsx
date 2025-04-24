@@ -84,9 +84,10 @@ function User() {
             <td className="p-2">{item.Roll_No}</td>
             <td className="p-2">{item.Dept}</td>
             <td className="p-2">{item.Password}</td>
-            <td className="p-2">{item.createdAt}</td>
+            <td className="p-2">{new Date(new Date(item.createdAt)).toLocaleDateString()}</td>
             <td className="p-2 flex justify-center gap-2">
-              <button className="py-2 px-4 bg-yellow-300 rounded-lg gap-2 font-semibold">
+              <button className="py-2 px-4 bg-yellow-300 rounded-lg gap-2 font-semibold"
+              onClick={openDialog}>
                 Edit
               </button>
               <button className="py-2 px-3 bg-red-600 rounded-lg font-semibold" onClick={()=>handleDelete(item._id)}>

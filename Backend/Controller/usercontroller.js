@@ -2,14 +2,16 @@ const Users = require("../Model/userauth");
 
 exports.createUser = async (req, res) => {
   try {
-    
+    console.log("Creating user with data:", req.body);
     const user = new Users(req.body);
     await user.save();
     return res.status(200).send(user);
   } catch (err) {
+    console.error("Error in createUser:", err);
     return res.status(500).send(err.message);
   }
 };
+
 
 exports.getAllUser = async (req, res) => {
 

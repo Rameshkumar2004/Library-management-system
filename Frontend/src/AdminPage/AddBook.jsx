@@ -11,7 +11,7 @@ function AddBook({ dialogRef }) {
          }
        };
      
-       const { register, handleSubmit, formState: { errors } } = useForm();
+       const { register, formState: { errors } } = useForm();
        const onSubmit = (data) => {
          console.log(data);
        };
@@ -24,29 +24,37 @@ function AddBook({ dialogRef }) {
   const [rack, setRack]=useState("")
   const [nocopies, setNocopies]=useState(null)
   const [status, setStatus]=useState("")
+  // const [image, setImage]=useState(null);
+  // const [imageUrl, setImageUrl]=useState('');
 
 
-  const SubmitHandler=(event)=>{
+  const submitHandler=(event)=>{
     event.preventDefault();
-    const formData=new FormData();
-    formData.append('bookname',bookname);
-    formData.append("sbin",sbin);
-    formData.append('author',author);
-    formData.append('publisher',publisher);
-    formData.append('category',category);
-    formData.append('rack', rack);
-    formData.append('nocopies',nocopies);
-    formData.append('status',status);
-    axios.post("http://localhost:3000/api/Book/create", formData)
-    .then(res=>{
-      console.log(res);
-      
-    })
-    .catch(err=>{
-      console.log(err);
-      
-    })
+    console.log(bookname,sbin,author,publisher,category,rack,nocopies ,status);
 
+    const data = {
+      bookname,sbin,author,publisher,category,rack,nocopies ,status
+    };
+  
+    axios.post("http://localhost:3000/api/Book/create", data)
+      .then(res => {
+        console.log("Book created:", res.data);
+        alert("Book added successfully!");
+        closeDialog();
+      })
+      .catch(err => {
+        console.error("Error creating book:", err.response?.data || err.message);
+        alert("Failed to create book.");
+      });
+    
+  
+    
+
+  }
+
+  const fileHandler =(e)=>{
+    setImage(e.target.files[0])
+    setImageUrl(URL.createObjectURL(e.target.files[0]))
   }
 
 
@@ -58,7 +66,6 @@ function AddBook({ dialogRef }) {
           className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 rounded-full border-2 px-2 py-1 text-red-700"
           onClick={closeDialog}
         >
-         {/* <Link to="http://localhost:5173/adminpage/books">X</Link>  */}
          X
         </button>
         <h2 className="text-center text-3xl font-bold mb-6">
@@ -66,7 +73,7 @@ function AddBook({ dialogRef }) {
         </h2>
         
         <form
-           onSubmit={handleSubmit(onSubmit)}
+           onSubmit={submitHandler}
           className="flex flex-col gap-4"
         >
           <div className="flex flex-col">
@@ -165,7 +172,10 @@ function AddBook({ dialogRef }) {
                 Not Available
               </option>
             </select>
+            
           </div>
+          {/* <input required  onChange={fileHandler} className='p-2 border-2 border-[#a5a5a5] rounded-lg w-[70%]' type="file" />
+               {imageUrl && <img  className=' h-[100px]' required  src={imageUrl} alt="Institute logog" />} */}
 
           <div className=" flex justify-evenly">
             <button
